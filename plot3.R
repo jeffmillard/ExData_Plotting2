@@ -1,19 +1,25 @@
 ## =====================================================================
-## Function:	plot2.R function()
+## Function:	plot3.R function()
 ## ---------------------------------------------------------------------
 ## Assignment Description:
 #
 # Using NEI data for 1999, 2002, 2005 and 2008 - address the following 
 # question
 #
-#	"Have total emissions from PM2.5 decreased in the Baltimore City, 
-#	Maryland (fips=="24510" from 1999 to 2008? Use the base plotting 
-#	system to make a plot answering this question."
+#	"Of the four types of sources indicted by the "type" (point, 
+#	nonnpoint, onroad, offraod) variable,, which of these four 
+#	sources have seen decreases in emissions from 1999 to 2008 for
+#	Baltimire City?  Whcih have seen increases in emissions from
+#	1999-2008? Use the ggplot2 plotting system to make a plot 
+#	answering this question."
 #
-# Plot is to be saved as png named "plot2.png"
+# Plot is to be saved as png named "plot3.png"
 #
+## http://www.epa.gov/otaq/standards/basicinfo.htm
+## levels(as.factor(SCC$SCC.Level.Three))])
+
 ## ---------------------------------------------------------------------
-plot2 <- function() {
+plot3 <- function() {
 	
 	# Read the RDS files.  Only need NEI, since this is by year from 
 	# all sources and I will later subset location to only Baltimore 
@@ -24,9 +30,13 @@ plot2 <- function() {
 	# subset to just Baltimore City
 	baltcity.NEI <- NEI[NEI$fips=="24510",]
 	
-	# use tapply to calculate the sum by year
-	sumbyYear <- tapply(baltcity.NEI$Emissions, 
-				   baltcity.NEI$year, sum)
+	# still use tapply() to calculate the sum by year, but this time 
+	# I pass a list of indices list(year, type). Rock on!
+	
+	sumbySource <- tapply(baltcity.NEI$Emissions, 
+				    list(baltcity.NEI$year, baltcity.NEI$type), 
+				    sum)
+	
 	
 	# open png graphic device
 	png(filename = "plot2.png",
@@ -43,5 +53,5 @@ plot2 <- function() {
 	
 	# added this just to remove the cryptic message automatically 
 	# echoed to console when dev.off() executes.
-	paste("File plot2.png created in directory", getwd(), sep=" ")
+	paste("File plot3.png created in directory", getwd(), sep=" ")
 }

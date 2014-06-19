@@ -1,5 +1,5 @@
 ## =====================================================================
-## Function:	plot2.R function()
+## Function:	plot4.R function()
 ## ---------------------------------------------------------------------
 ## Assignment Description:
 #
@@ -13,7 +13,7 @@
 # Plot is to be saved as png named "plot2.png"
 #
 ## ---------------------------------------------------------------------
-plot2 <- function() {
+plot4 <- function() {
 	
 	# Read the RDS files.  Only need NEI, since this is by year from 
 	# all sources and I will later subset location to only Baltimore 
@@ -29,7 +29,7 @@ plot2 <- function() {
 				   baltcity.NEI$year, sum)
 	
 	# open png graphic device
-	png(filename = "plot2.png",
+	png(filename = "plot4.png",
 	    width = 640, height = 480, units = "px",
 	    bg = "white",  type = "quartz")
 
@@ -43,5 +43,5 @@ plot2 <- function() {
 	
 	# added this just to remove the cryptic message automatically 
 	# echoed to console when dev.off() executes.
-	paste("File plot2.png created in directory", getwd(), sep=" ")
+	paste("File plot4.png created in directory", getwd(), sep=" ")
 }
