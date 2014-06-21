@@ -24,7 +24,7 @@ plot3 <- function() {
 	# all sources and I will later subset location to only Baltimore 
 	# City, Maryland.
 	
-	# NEI <- readRDS("summarySCC_PM25.rds")
+	NEI <- readRDS("summarySCC_PM25.rds")
 
 	# subset to just Baltimore City
 	baltcity.NEI <- NEI[NEI$fips=="24510",]
@@ -33,7 +33,7 @@ plot3 <- function() {
 	sumbySource <- melt(tapply(baltcity.NEI$Emissions, 
 				    list(baltcity.NEI$year, baltcity.NEI$type), 
 				    sum))
-	# Give the columns nicer names that "Var1" etc
+	# Give the columns nicer names than "Var1" etc
 	names(sumbySource) <- c("Year", "Type", "Emissions")
 	
 	# *** Fun facts - alternative approach is to use aggregate(): ***

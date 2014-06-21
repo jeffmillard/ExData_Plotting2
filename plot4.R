@@ -6,37 +6,78 @@
 # Using NEI data for 1999, 2002, 2005 and 2008 - address the following 
 # question
 #
-#	"Have total emissions from PM2.5 decreased in the Baltimore City, 
-#	Maryland (fips=="24510" from 1999 to 2008? Use the base plotting 
-#	system to make a plot answering this question."
+#	"Across the United States, how have emissions from coal 
+#	combustion-related sources changed from 1999–2008?
+#	Upload a PNG file containing your plot addressing this question."
 #
-# Plot is to be saved as png named "plot2.png"
+# Plot is to be saved as png named "plot4.png"
 #
+# 
+## http://www.epa.gov/otaq/standards/basicinfo.htm
+## levels(as.factor(SCC$SCC.Level.Three))])
+
+
 ## ---------------------------------------------------------------------
 plot4 <- function() {
 	
-	# Read the RDS files.  Only need NEI, since this is by year from 
-	# all sources and I will later subset location to only Baltimore 
-	# City, Maryland.
+	# ----------------------------------------------------------------
+	# Read and merge the RDS files
+	# ----------------------------------------------------------------
+	# Read *_both_* RDS files.
 	
-	NEI <- readRDS("summarySCC_PM25.rds")
+	#NEI <- readRDS("summarySCC_PM25.rds")
+	#SCC <- readRDS("Source_Classification_Code.rds")
+	
+	# Merge the 2 data frames on the SCC code
+	#merged.DF <- merge(NEI, SCC, by="SCC")
+	
+	# ----------------------------------------------------------------
+	# Select only "coal combustion-related sources"
+	# ----------------------------------------------------------------
+	#
+	# I have chosen to include everything that has "Coal" (with
+	# a capital "C") appearing anywhere in the SCC.Level.Three
+	# feature, but exclude activities listed as "Coal Mining ..."
+	# and "Coal Bed Methane"
+	#
+	# "Coal Mining" appears to refer to pollutants generated
+	# by mining coal, and would include more than coal as fuel
+	# sources.
+	#
+	# "Coal Bed Methane" is a fuel, but it is not coal, so I
+	# left that out for that reason.
+	#
 
-	# subset to just Baltimore City
-	baltcity.NEI <- NEI[NEI$fips=="24510",]
+	coal.DF <- data.frame(merged.DF[grep("Coal", merged.DF$SCC.Level.Three),])
+
+	# I noted that subsetting using grep(... invert=TRUE) was a 
+	# more reliable than subsetting using  -grep()
+	coal.DF <- coal.DF[(grep("Coal Mining", coal.DF$Short.Name, invert=TRUE)),]
+	coal.DF <- coal.DF[(grep("Coal Bed Methane", coal.DF$Short.Name, invert=TRUE)),]
 	
-	# use tapply to calculate the sum by year
-	sumbyYear <- tapply(baltcity.NEI$Emissions, 
-				   baltcity.NEI$year, sum)
+	# ----------------------------------------------------------------
+	# Summarize data
+	# ----------------------------------------------------------------	
+	# use melt+tapply to calculate the sum of coal combustion by year
+	coalbyYear <- melt(tapply(coal.DF$Emissions, 
+				   coal.DF$year, sum))
+	names(coalbyYear) <- c("Year", "Emissions")
 	
+	# ----------------------------------------------------------------
+	# Create plot
+	# ----------------------------------------------------------------
 	# open png graphic device
 	png(filename = "plot4.png",
 	    width = 640, height = 480, units = "px",
-	    bg = "white",  type = "quartz")
-
-	# base system xy plot
-	plot(names(sumbyYear), sumbyYear, type='b', col="purple",
-	     main="Baltimore City, Maryland Annual PM2.5 Emissions",
-	     pch=15, xlab="Year", ylab="Emissions (tons)")	
+	    type = "quartz")
+	
+	# ggplot2
+	p4 <- ggplot(coalbyYear, aes(Year, Emissions))	
+	p4 <- p4 + geom_point(size=4) 
+	p4 <- p4 + geom_line()
+	p4 <- p4 + labs(title = "Pollutant Emissions from Coal Combustion Related Sources 1999-2008")
+	p4 <- p4 + labs(y = "Total Annual Emissions (tons)")
+	print(p4)
 	
 	# done with the plot; output the file by closing graphic device
 	dev.off()
