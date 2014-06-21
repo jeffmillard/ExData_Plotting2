@@ -12,11 +12,6 @@
 #
 # Plot is to be saved as png named "plot4.png"
 #
-# 
-## http://www.epa.gov/otaq/standards/basicinfo.htm
-## levels(as.factor(SCC$SCC.Level.Three))])
-
-
 ## ---------------------------------------------------------------------
 plot4 <- function() {
 	
@@ -25,11 +20,11 @@ plot4 <- function() {
 	# ----------------------------------------------------------------
 	# Read *_both_* RDS files.
 	
-	#NEI <- readRDS("summarySCC_PM25.rds")
-	#SCC <- readRDS("Source_Classification_Code.rds")
+	NEI <- readRDS("summarySCC_PM25.rds")
+	SCC <- readRDS("Source_Classification_Code.rds")
 	
 	# Merge the 2 data frames on the SCC code
-	#merged.DF <- merge(NEI, SCC, by="SCC")
+	merged.DF <- merge(NEI, SCC, by="SCC")
 	
 	# ----------------------------------------------------------------
 	# Select only "coal combustion-related sources"

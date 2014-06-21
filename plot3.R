@@ -9,7 +9,7 @@
 #	"Of the four types of sources indicted by the "type" (point, 
 #	nonnpoint, onroad, offraod) variable,, which of these four 
 #	sources have seen decreases in emissions from 1999 to 2008 for
-#	Baltimire City?  Whcih have seen increases in emissions from
+#	Baltimire City?  Which have seen increases in emissions from
 #	1999-2008? 
 #
 # 	Use the ggplot2 plotting system to make a plot answering this
